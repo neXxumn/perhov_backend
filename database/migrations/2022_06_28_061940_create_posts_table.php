@@ -15,7 +15,8 @@ class CreatePostsTable extends Migration
     {
         Schema::create('posts', function (Blueprint $post) {
             $post->id();
-            $post->integer('user_id');
+            $post->integer('user_id')->constrained('users');
+            $post->string('tag')->constrained('tags');
             $post->string('title')->nullable(false);
             $post->text('content')->nullable(false);
             $post->string('image')->nullable(false);
@@ -30,6 +31,8 @@ class CreatePostsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('posts', function (Blueprint $post) {
+            $post->dropForeign(['user_id']);
+        });
     }
 }
