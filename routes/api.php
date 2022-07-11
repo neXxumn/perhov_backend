@@ -2,8 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RegistrationController;
-use App\Http\Controllers\AuthorizationController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
 
 /*
@@ -22,15 +21,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::controller(NewsController::class)->group(function () {
-    Route::get('/news', 'index');
-    Route::get('/news/{id}', 'show');
-    Route::post('/news', 'create');
+    Route::prefix('news')->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::post('/', 'create');
+    });
 });
 
-Route::controller(RegistrationController::class)->group(function() {
-    Route::post('/registration', 'createUser');
-});
-
-Route::controller(AuthorizationController::class)->group(function() {
-    Route::post('/authorization', 'userLogin');
+Route::controller(AuthController::class)->group(function() {
+        Route::post('/registration', 'createUser');
+        Route::post('/authorization', 'userLogin');
 });

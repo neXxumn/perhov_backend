@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 use App\Models\User;
 
-class RegistrationController extends Controller
+class AuthController extends Controller
 {
     public function createUser(Request $request)
     {
@@ -34,7 +34,20 @@ class RegistrationController extends Controller
         }
 
         else {
-            return response()->json(["status" => "failed", "success" => false, "message" => "Whoops! user not created. please try again."]);
+            return response()->json(JsonResponse::HTTP_RESET_CONTENT);
+        }
+    }
+
+    public function userLogin(Request $request)
+    {
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = Auth::user();
+            $token = $user->createToken('token')->accessToken;
+
+            return response()->json(["login" => true, "token" => $token, "data" => $user], JsonResponse::HTTP_CREATED);
+        }
+        else {
+            return response()->json(JsonResponse::HTTP_RESET_CONTENT);
         }
     }
 }
