@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
 
 /*
@@ -19,4 +20,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/news', [PostController::class, 'index']);
+Route::controller(NewsController::class)->group(function () {
+    Route::prefix('news')->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::post('/', 'create');
+    });
+});
+
+Route::controller(AuthController::class)->group(function() {
+        Route::post('/registration', 'createUser');
+        Route::post('/authorization', 'userLogin');
+});
