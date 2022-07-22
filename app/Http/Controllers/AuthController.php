@@ -30,11 +30,11 @@ class AuthController extends Controller
         ]);
 
         if(!is_null($newUser)) {
-            return response()->json(["data" => $newUser], JsonResponse::HTTP_CREATED);
+            $token = $newUser->createToken('token')->accessToken;
+            return response()->json(["data" => $newUser, "token" => $token], JsonResponse::HTTP_CREATED);
         }
-
         else {
-            return response()->json(JsonResponse::HTTP_RESET_CONTENT);
+            return response()->json(["login" => false], JsonResponse::HTTP_RESET_CONTENT);
         }
     }
 
@@ -47,7 +47,12 @@ class AuthController extends Controller
             return response()->json(["login" => true, "token" => $token, "data" => $user], JsonResponse::HTTP_CREATED);
         }
         else {
-            return response()->json(JsonResponse::HTTP_RESET_CONTENT);
+            return response()->json(["login" => false], JsonResponse::HTTP_BAD_REQUEST);
         }
+    }
+
+    public function getUserData($user_id){
+        $user = User::find($user_id);
+        return response()->json(["data" => $user], JsonResponse::HTTP_OK);
     }
 }
