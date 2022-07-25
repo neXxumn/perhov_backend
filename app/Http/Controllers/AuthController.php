@@ -13,7 +13,7 @@ class AuthController extends Controller
     public function createUser(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|max:30',
+            'email' => 'required|unique:users|max:30',
             'name' => 'required|max:30',
             'password' => 'required|alpha_num|min:6|max:30',
         ]);
@@ -34,7 +34,7 @@ class AuthController extends Controller
             return response()->json(["data" => $newUser, "token" => $token], JsonResponse::HTTP_CREATED);
         }
         else {
-            return response()->json(["login" => false], JsonResponse::HTTP_RESET_CONTENT);
+            return response()->json(["login" => "Registration error"], JsonResponse::HTTP_RESET_CONTENT);
         }
     }
 
@@ -47,11 +47,12 @@ class AuthController extends Controller
             return response()->json(["login" => true, "token" => $token, "data" => $user], JsonResponse::HTTP_CREATED);
         }
         else {
-            return response()->json(["login" => false], JsonResponse::HTTP_BAD_REQUEST);
+            return response()->json(["login" => "Incorrect email or password"], JsonResponse::HTTP_BAD_REQUEST);
         }
     }
 
-    public function getUserData($user_id){
+    public function getUserData($user_id)
+    {
         $user = User::find($user_id);
         return response()->json(["data" => $user], JsonResponse::HTTP_OK);
     }
