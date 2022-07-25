@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::controller(NewsController::class)->group(function () {
+Route::controller(PostController::class)->group(function () {
     Route::prefix('news')->group(function () {
         Route::get('/', 'index');
         Route::get('/{id}', 'show');
@@ -31,4 +31,5 @@ Route::controller(NewsController::class)->group(function () {
 Route::controller(AuthController::class)->group(function() {
         Route::post('/registration', 'createUser');
         Route::post('/authorization', 'userLogin');
+        Route::get('/users/{id}', 'getUserData');
 });
