@@ -23,8 +23,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::controller(PostController::class)->group(function () {
     Route::prefix('news')->group(function () {
         Route::get('/', 'index');
-        Route::get('/{id}', 'show');
-        Route::post('/', 'create');
+        Route::post('/', 'createPost');
+        Route::get('/tags{id}', 'showTags');
     });
 });
 
